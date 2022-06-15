@@ -17,20 +17,50 @@ export class PostingService {
   }
 
   async getAllPosts() {
-    return await this.postingRepository.find();
-  }
-
-  async getSearchCompany(company): Promise<Posting[]> {
     return await this.postingRepository
       .createQueryBuilder()
+      .select([
+        'idx',
+        'companyName',
+        'country',
+        'area',
+        'position',
+        'compensation',
+        'stack',
+      ])
+      .getRawMany();
+  }
+
+  getSearchCompany(company): Promise<Posting[]> {
+    return this.postingRepository
+      .createQueryBuilder()
+      .select([
+        'idx',
+        'companyName',
+        'country',
+        'area',
+        'position',
+        'compensation',
+        'stack',
+      ])
       .where('companyName = :companyname', { companyname: company })
       .getRawMany();
   }
 
-  async getSearchStack(stack): Promise<Posting[]> {
+  async getPostingDetail(idx): Promise<Posting[]> {
     return await this.postingRepository
       .createQueryBuilder()
-      .where('stack = :stackname', { stackname: stack })
+      .select([
+        'idx',
+        'companyName',
+        'country',
+        'area',
+        'position',
+        'compensation',
+        'stack',
+        'content',
+      ])
+      .where('idx = :postId', { postId: idx })
       .getRawMany();
   }
 

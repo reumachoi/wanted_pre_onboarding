@@ -1,4 +1,4 @@
-export declare class PostingGetDto {
+export declare class PostingDetailDto {
     idx: number;
     companyId: number;
     companyName: string;
@@ -6,5 +6,6 @@ export declare class PostingGetDto {
     area: string;
     position: string;
     compensation: number;
+    content: string;
     stack: string;
 }

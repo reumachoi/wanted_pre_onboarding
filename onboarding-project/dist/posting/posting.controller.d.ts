@@ -8,9 +8,9 @@ export declare class PostingController {
     private companyService;
     constructor(postingService: PostingService, companyService: CompanyService);
     createPost(postingCreateDto: PostingCreateDto): Promise<Posting>;
-    getListPost(): Promise<Posting[]>;
+    getListPost(): Promise<any[]>;
     getSearchCompany(keyword: string): Promise<Posting[]>;
-    getSearchStack(keyword: string): Promise<Posting[]>;
     updatePost(postingId: string, postingUpdateDto: PostingUpdateDto): Promise<import("typeorm").UpdateResult>;
     deletePost(postingId: number): Promise<import("typeorm").DeleteResult>;
+    getPostingDetail(id: number): Promise<Posting[]>;
 }

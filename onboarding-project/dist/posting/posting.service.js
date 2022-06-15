@@ -25,18 +25,48 @@ let PostingService = class PostingService {
         return await this.postingRepository.save(posting);
     }
     async getAllPosts() {
-        return await this.postingRepository.find();
-    }
-    async getSearchCompany(company) {
         return await this.postingRepository
             .createQueryBuilder()
+            .select([
+            'idx',
+            'companyName',
+            'country',
+            'area',
+            'position',
+            'compensation',
+            'stack',
+        ])
+            .getRawMany();
+    }
+    getSearchCompany(company) {
+        return this.postingRepository
+            .createQueryBuilder()
+            .select([
+            'idx',
+            'companyName',
+            'country',
+            'area',
+            'position',
+            'compensation',
+            'stack',
+        ])
             .where('companyName = :companyname', { companyname: company })
             .getRawMany();
     }
-    async getSearchStack(stack) {
+    async getPostingDetail(idx) {
         return await this.postingRepository
             .createQueryBuilder()
-            .where('stack = :stackname', { stackname: stack })
+            .select([
+            'idx',
+            'companyName',
+            'country',
+            'area',
+            'position',
+            'compensation',
+            'stack',
+            'content',
+        ])
+            .where('idx = :postId', { postId: idx })
             .getRawMany();
     }
     async updatePost(id, postingUpdateDto) {

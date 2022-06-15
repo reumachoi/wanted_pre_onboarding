@@ -72,4 +72,10 @@ export class PostingController {
     const result = await this.postingService.deletePost(postingId);
     return result;
   }
+
+  @Get('/detail')
+  async getPostingDetail(@Query('id') id: number) {
+    const result = await this.postingService.getPostingDetail(id);
+    return result;
+  }
 }
