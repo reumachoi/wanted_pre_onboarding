@@ -15,8 +15,24 @@ let Posting = class Posting {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", String)
+], Posting.prototype, "idx", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
-], Posting.prototype, "id", void 0);
+], Posting.prototype, "companyId", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Posting.prototype, "companyName", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Posting.prototype, "country", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Posting.prototype, "area", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)

@@ -1,5 +1,5 @@
-export class PostingDto {
-  postion: string;
+export class PostingUpdateDto {
+  position: string;
   compensation: number;
   content: string;
   stack: string;

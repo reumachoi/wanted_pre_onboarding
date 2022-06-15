@@ -6,40 +6,69 @@ import {
   Param,
   Post,
   Put,
+  Query,
+  Req,
 } from '@nestjs/common';
-import { PostingDto } from './posting.dto';
+import { CompanyService } from 'src/company/company.service';
+import { PostingCreateDto } from './dto/posting.create.dto';
+import { PostingDto } from './dto/posting.dto';
+import { PostingUpdateDto } from './dto/posting.update.dto';
+import { Posting } from './posting.entity';
 import { PostingService } from './posting.service';
 
 @Controller('posting')
 export class PostingController {
-  constructor(private postingService: PostingService) {}
+  constructor(
+    private postingService: PostingService,
+    private companyService: CompanyService,
+  ) {}
 
   @Post()
-  async create(@Body() postingDto: PostingDto) {
-    const result = await this.postingService.createPost(postingDto);
+  async createPost(@Body() postingCreateDto: PostingCreateDto) {
+    const company = await this.companyService.getOneCompany(
+      postingCreateDto.companyId,
+    );
+
+    const posting = new Posting();
+    posting.companyId = company.companyId;
+    posting.companyName = company.companyName;
+    posting.country = company.country;
+    posting.area = company.area;
+    posting.position = postingCreateDto.position;
+    posting.compensation = postingCreateDto.compensation;
+    posting.content = postingCreateDto.content;
+    posting.stack = postingCreateDto.stack;
+
+    const result = await this.postingService.createPost(posting);
     return result;
   }
 
   @Get()
-  async getList() {
+  async getListPost() {
     const result = await this.postingService.getAllPosts();
     return result;
   }
 
-  @Get(':id')
-  async getOne(@Param('id') postingId: number) {
-    const result = await this.postingService.getOnePost({ id: postingId });
+  @Get('/search')
+  async getSearchCompany(@Query('company') keyword: string) {
+    const result = await this.postingService.getSearchCompany(keyword);
     return result;
   }
 
   @Put(':id')
-  async setOne(@Param('id') postingId: number, @Body() postingDto: PostingDto) {
-    const result = await this.postingService.updatePost(postingId, postingDto);
+  async updatePost(
+    @Param('id') postingId: string,
+    @Body() postingUpdateDto: PostingUpdateDto,
+  ) {
+    const result = await this.postingService.updatePost(
+      +postingId,
+      postingUpdateDto,
+    );
     return result;
   }
 
   @Delete(':id')
-  async removeOne(@Param('id') postingId: number) {
+  async deletePost(@Param('id') postingId: number) {
     const result = await this.postingService.deletePost(postingId);
     return result;
   }

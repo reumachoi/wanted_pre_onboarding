@@ -14,29 +14,47 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostingController = void 0;
 const common_1 = require("@nestjs/common");
-const posting_dto_1 = require("./posting.dto");
+const company_service_1 = require("../company/company.service");
+const posting_create_dto_1 = require("./dto/posting.create.dto");
+const posting_update_dto_1 = require("./dto/posting.update.dto");
+const posting_entity_1 = require("./posting.entity");
 const posting_service_1 = require("./posting.service");
 let PostingController = class PostingController {
-    constructor(postingService) {
+    constructor(postingService, companyService) {
         this.postingService = postingService;
+        this.companyService = companyService;
     }
-    async create(postingDto) {
-        const result = await this.postingService.createPost(postingDto);
+    async createPost(postingCreateDto) {
+        const company = await this.companyService.getOneCompany(postingCreateDto.companyId);
+        const posting = new posting_entity_1.Posting();
+        posting.companyId = company.companyId;
+        posting.companyName = company.companyName;
+        posting.country = company.country;
+        posting.area = company.area;
+        posting.position = postingCreateDto.position;
+        posting.compensation = postingCreateDto.compensation;
+        posting.content = postingCreateDto.content;
+        posting.stack = postingCreateDto.stack;
+        const result = await this.postingService.createPost(posting);
         return result;
     }
-    async getList() {
+    async getListPost() {
         const result = await this.postingService.getAllPosts();
         return result;
     }
-    async getOne(postingId) {
-        const result = await this.postingService.getOnePost({ id: postingId });
+    async getSearchCompany(keyword) {
+        const result = await this.postingService.getSearchCompany(keyword);
         return result;
     }
-    async setOne(postingId, postingDto) {
-        const result = await this.postingService.updatePost(postingId, postingDto);
+    async getSearchStack(keyword) {
+        const result = await this.postingService.getSearchStack(keyword);
         return result;
     }
-    async removeOne(postingId) {
+    async updatePost(postingId, postingUpdateDto) {
+        const result = await this.postingService.updatePost(+postingId, postingUpdateDto);
+        return result;
+    }
+    async deletePost(postingId) {
         const result = await this.postingService.deletePost(postingId);
         return result;
     }
@@ -45,40 +63,48 @@ __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [posting_dto_1.PostingDto]),
+    __metadata("design:paramtypes", [posting_create_dto_1.PostingCreateDto]),
     __metadata("design:returntype", Promise)
-], PostingController.prototype, "create", null);
+], PostingController.prototype, "createPost", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], PostingController.prototype, "getList", null);
+], PostingController.prototype, "getListPost", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)('/search'),
+    __param(0, (0, common_1.Query)('company')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], PostingController.prototype, "getOne", null);
+], PostingController.prototype, "getSearchCompany", null);
+__decorate([
+    (0, common_1.Get)('/search'),
+    __param(0, (0, common_1.Query)('stack')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], PostingController.prototype, "getSearchStack", null);
 __decorate([
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, posting_dto_1.PostingDto]),
+    __metadata("design:paramtypes", [String, posting_update_dto_1.PostingUpdateDto]),
     __metadata("design:returntype", Promise)
-], PostingController.prototype, "setOne", null);
+], PostingController.prototype, "updatePost", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], PostingController.prototype, "removeOne", null);
+], PostingController.prototype, "deletePost", null);
 PostingController = __decorate([
     (0, common_1.Controller)('posting'),
-    __metadata("design:paramtypes", [posting_service_1.PostingService])
+    __metadata("design:paramtypes", [posting_service_1.PostingService,
+        company_service_1.CompanyService])
 ], PostingController);
 exports.PostingController = PostingController;
 //# sourceMappingURL=posting.controller.js.map

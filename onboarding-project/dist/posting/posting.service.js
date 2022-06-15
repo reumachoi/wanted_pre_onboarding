@@ -21,20 +21,29 @@ let PostingService = class PostingService {
     constructor(postingRepository) {
         this.postingRepository = postingRepository;
     }
-    createPost(postingDto) {
-        return this.postingRepository.save(postingDto);
+    async createPost(posting) {
+        return await this.postingRepository.save(posting);
     }
-    getAllPosts() {
-        return this.postingRepository.find();
+    async getAllPosts() {
+        return await this.postingRepository.find();
     }
-    getOnePost(postingId) {
-        return this.postingRepository.findOne({ where: { id: postingId } });
+    async getSearchCompany(company) {
+        return await this.postingRepository
+            .createQueryBuilder()
+            .where('companyName = :companyname', { companyname: company })
+            .getRawMany();
     }
-    updatePost(id, postingDto) {
-        return this.postingRepository.update(id, postingDto);
+    async getSearchStack(stack) {
+        return await this.postingRepository
+            .createQueryBuilder()
+            .where('stack = :stackname', { stackname: stack })
+            .getRawMany();
     }
-    deletePost(id) {
-        return this.postingRepository.delete(id);
+    async updatePost(id, postingUpdateDto) {
+        return await this.postingRepository.update(id, postingUpdateDto);
+    }
+    async deletePost(id) {
+        return await this.postingRepository.delete(id);
     }
 };
 PostingService = __decorate([

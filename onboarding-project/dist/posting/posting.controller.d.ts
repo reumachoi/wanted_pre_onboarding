@@ -1,11 +1,16 @@
-import { PostingDto } from './posting.dto';
+import { CompanyService } from 'src/company/company.service';
+import { PostingCreateDto } from './dto/posting.create.dto';
+import { PostingUpdateDto } from './dto/posting.update.dto';
+import { Posting } from './posting.entity';
 import { PostingService } from './posting.service';
 export declare class PostingController {
     private postingService;
-    constructor(postingService: PostingService);
-    create(postingDto: PostingDto): Promise<PostingDto & import("./posting.entity").Posting>;
-    getList(): Promise<import("./posting.entity").Posting[]>;
-    getOne(postingId: number): Promise<import("./posting.entity").Posting>;
-    setOne(postingId: number, postingDto: PostingDto): Promise<import("typeorm").UpdateResult>;
-    removeOne(postingId: number): Promise<import("typeorm").DeleteResult>;
+    private companyService;
+    constructor(postingService: PostingService, companyService: CompanyService);
+    createPost(postingCreateDto: PostingCreateDto): Promise<Posting>;
+    getListPost(): Promise<Posting[]>;
+    getSearchCompany(keyword: string): Promise<Posting[]>;
+    getSearchStack(keyword: string): Promise<Posting[]>;
+    updatePost(postingId: string, postingUpdateDto: PostingUpdateDto): Promise<import("typeorm").UpdateResult>;
+    deletePost(postingId: number): Promise<import("typeorm").DeleteResult>;
 }

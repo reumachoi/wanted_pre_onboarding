@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PostingDto } from './posting.dto';
 import { Posting } from './posting.entity';
+import { CompanyService } from '../company/company.service';
+import { PostingUpdateDto } from './dto/posting.update.dto';
 
 @Injectable()
 export class PostingService {
@@ -11,23 +12,33 @@ export class PostingService {
     private readonly postingRepository: Repository<Posting>,
   ) {}
 
-  createPost(postingDto: PostingDto) {
-    return this.postingRepository.save(postingDto);
+  async createPost(posting: Posting) {
+    return await this.postingRepository.save(posting);
   }
 
-  getAllPosts() {
-    return this.postingRepository.find();
+  async getAllPosts() {
+    return await this.postingRepository.find();
   }
 
-  async getOnePost(postingId): Promise<Posting> {
-    return await this.postingRepository.findOne({ where: { id: postingId } });
+  async getSearchCompany(company): Promise<Posting[]> {
+    return await this.postingRepository
+      .createQueryBuilder()
+      .where('companyName = :companyname', { companyname: company })
+      .getRawMany();
   }
 
-  updatePost(id: number, postingDto: PostingDto) {
-    return this.postingRepository.update(id, postingDto);
+  async getSearchStack(stack): Promise<Posting[]> {
+    return await this.postingRepository
+      .createQueryBuilder()
+      .where('stack = :stackname', { stackname: stack })
+      .getRawMany();
   }
 
-  deletePost(id) {
-    return this.postingRepository.delete(id);
+  async updatePost(id: number, postingUpdateDto: PostingUpdateDto) {
+    return await this.postingRepository.update(id, postingUpdateDto);
+  }
+
+  async deletePost(id) {
+    return await this.postingRepository.delete(id);
   }
 }
